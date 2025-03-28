@@ -1,10 +1,10 @@
 /* src/components/Registration.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
 
 .registration-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   height: 100vh;
   background-color: #f4f4f4;
   font-family: 'Montserrat', poppins, sans-serif;
@@ -13,6 +13,16 @@
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+}
+
+.registration-form-container {
+  position: relative; /* Added relative positioning for the close button */
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
@@ -25,11 +35,6 @@ h2 {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 400px;
-  padding: 30px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .input-group {
@@ -73,6 +78,23 @@ h2 {
 
 .register-btn:active {
   background-color: #FF69B4;
+}
+
+/* Close button (X) inside the registration form container */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #FF69B4;
 }
 
 body {

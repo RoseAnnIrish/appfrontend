@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import './Registration.css';
-import {BaseUrl} from "../constants";
-
+import { BaseUrl } from "../constants";
 
 const Registration = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-    const navigate = useNavigate();
-
-
+  const navigate = useNavigate();
 
   function setMessage(registrationSuccessful) {
     if (registrationSuccessful) {
@@ -22,7 +19,7 @@ const Registration = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/register/", {
+      const response = await fetch(BaseUrl + '/api/register/', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
@@ -44,13 +41,20 @@ const Registration = () => {
     }
   };
 
+  // Function to handle closing and navigating to the login page
+  const handleClose = () => {
+    navigate('/login');
+  };
+
   return (
     <div className="registration-container">
+      {/* Close button (X) */}
+      <button onClick={handleClose} className="close-btn">X</button>
+
       <form onSubmit={handleSubmit} className="registration-form">
-              <h2>Create an Account</h2>
+        <h2>Create an Account</h2>
 
         <div className="input-group">
-
           <label htmlFor="username">Username</label>
           <input
             type="text"
