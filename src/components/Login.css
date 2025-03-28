@@ -1,52 +1,96 @@
 /* src/components/Login.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
 .login-container {
-  width: 100%;
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+  font-family: 'Montserrat', poppins, sans-serif;
+
+  background-image: url('https://xmple.com/wallpaper/gradient-linear-pink-3840x2160-c2-ffc0cb-ff69b4-a-120-f-14.svg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
-.login-form h2 {
+h2 {
+  font-size: 2rem;
   margin-bottom: 20px;
+  color: #333;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .input-group {
   margin-bottom: 15px;
-  text-align: left;
 }
 
 .input-group label {
-  display: block;
-  font-weight: bold;
+  font-size: 1rem;
   margin-bottom: 5px;
+  color: #555;
 }
 
 .input-group input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #007BFF;
 }
 
 .login-btn {
-  width: 100%;
-  padding: 10px;
-  background-color: #28a745;
+  padding: 12px;
+  font-size: 1.2rem;
+  background-color: #FF69B4;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .login-btn:hover {
-  background-color: #218838;
+  background-color: #E62987;
+}
+
+.login-btn:active {
+  background-color: #FF69B4;
 }
 
 .message {
   margin-top: 10px;
   color: red;
+}
+
+.signup-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.signup-link a {
+  color: #FF69B4;
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
 }
