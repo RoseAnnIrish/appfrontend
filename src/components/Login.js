@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import {BaseUrl} from "../constants";
+import axios from "axios";
+import { BaseUrl } from "../constants";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -13,20 +14,26 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(BaseUrl+'/api/login/', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+      const response = await axios.post(BaseUrl + '/api/login/', {
+        username,
+        password
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      // Check if login was successful and response has the token
+      if (response.status === 200) {
         setMessage("Login successful!");
-        localStorage.setItem("token", data.token); // Save token
-        navigate("/dashboard"); // Redirect after login
+
+        // Access the token from response.data
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);  // Save the token
+          localStorage.setItem('user_id', response.data.user_id);  // Save the user ID
+
+          navigate("/todo"); // Redirect after successful login
+        } else {
+          setMessage("Token not received.");
+        }
       } else {
-        setMessage(data.error || "Invalid credentials");
+        setMessage(response.data.error || "Invalid credentials");
       }
     } catch (error) {
       setMessage("Error connecting to the server");
@@ -40,9 +47,9 @@ const Login = () => {
         <h2>Login</h2>
 
         <div className="input-group">
-          <label htmlFor="email">Username</label>
+          <label htmlFor="username">Username</label>
           <input
-            type="username"
+            type="text"
             id="username"
             name="username"
             value={username}
@@ -68,10 +75,9 @@ const Login = () => {
         <button type="submit" className="login-btn">Login</button>
         {message && <p className="message">{message}</p>}
 
-                <div className="signup-link">
+        <div className="signup-link">
           <p>Don't have an account? <a href="http://localhost:3000/register">Sign up here</a></p>
         </div>
-
       </form>
     </div>
   );
