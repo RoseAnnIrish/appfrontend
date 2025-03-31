@@ -1,0 +1,135 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { BaseUrl } from "../../constants";
+import { useNavigate } from 'react-router-dom';
+import './AddToDo.css';
+
+const AddToDo = ({ setTodos, setShowAddToDo }) => {
+  const [newTodo, setNewTodo] = useState({
+    user: localStorage.getItem('user_id'),
+    title: '',
+    description: '',
+    due_date: '',
+    status: 'pending'
+  });
+
+
+function AddToDo(props) {
+  const [user, setUser] = useState(1);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [due_date, setDueDate] = useState("");
+  const [status, setStatus] = useState("pending");
+
+    function handleTitleChange(e) {
+        setTitle(e.target.value)
+    }
+     function handleDescriptionChange(e) {
+        setDescription(e.target.value)
+    }
+     function handleDue_dateChange(e) {
+        setDueDate(e.target.value)
+    }
+    function handleStatusChange(e) {
+        setStatus(e.target.value)
+    }
+
+    function addtodo(){
+
+      let data = JSON.stringify({
+
+      "user": parseInt(localStorage.getItem('user_id')),
+      "title": title,
+      "description": description,
+     "due_date": due_date,
+      "status": status
+        });
+    }
+}
+
+
+
+
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: BaseUrl + '/api/todo/todo/',
+      headers: {
+        'Authorization': `Token ${token}`,
+      // Authorization: `Token ${localStorage.getItem("authtoken")}`,
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+  axios.request(config)
+            .then((response) => {
+                console.log(JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+  };
+
+  const handleCancel = () => {
+    setShowAddToDo(false);
+    navigate('/todo');
+  };
+
+  return (
+    <div className="addtodo-container">
+      <div className="addtodo-form">
+        <h3>Add New Todo</h3>
+
+        <div className="input-group">
+          <label>Title</label>
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={newTodo.title}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Description</label>
+          <textarea
+            name="description"
+            placeholder="Description"
+            value={newTodo.description}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Due Date</label>
+          <input
+            type="date"
+            name="due_date"
+            value={newTodo.due_date}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Status</label>
+          <select
+            name="status"
+            value={newTodo.status}
+            onChange={handleInputChange}
+          >
+            <option value="pending">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+
+        <button type="button" className="addtodo-btn" onClick={handleSaveTodo}>Save</button>
+        <button type="button" className="cancel-btn" onClick={handleCancel}>Cancel</button>
+      </div>
+    </div>
+  );
+};
+
+export default AddToDo;

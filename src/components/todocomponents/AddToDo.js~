@@ -1,0 +1,132 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { BaseUrl } from "../../constants";
+import { useNavigate } from 'react-router-dom';
+import './AddToDo.css';
+
+const AddToDo = ({ setTodos, setShowAddToDo }) => {
+  const navigate = useNavigate();
+  const [newTodo, setNewTodo] = useState({
+    user: localStorage.getItem('user_id'),
+    title: '',
+    description: '',
+    due_date: '',
+    status: 'pending'
+  });
+
+  // Handle input change dynamically
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewTodo({ ...newTodo, [name]: value });
+  };
+
+  // Function to add a new To-Do
+  const handleSaveTodo = async () => {
+  const token = localStorage.getItem("authtoken");
+
+  // ✅ Debugging: Check if the token exists
+  console.log("Auth Token:", token);
+
+  if (!token) {
+    console.error("No authentication token found!");
+    alert("You are not logged in. Please log in again.");
+    return; // Stop execution if there's no token
+  }
+
+  try {
+    const data = JSON.stringify({
+      user: parseInt(localStorage.getItem('user_id')),
+      title: newTodo.title,
+      description: newTodo.description,
+      due_date: newTodo.due_date,
+      status: newTodo.status
+    });
+
+    const config = {
+      method: 'post',
+      url: `${BaseUrl}/api/todo/todo/`,
+      headers: {
+        Authorization: `Token ${token}`,  // ✅ Make sure the token is sent correctly
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    console.log("Sending Request:", config); // ✅ Log the request config before sending
+
+    const response = await axios.request(config);
+    console.log("Response:", response.data); // ✅ Log the API response
+
+    setTodos((prevTodos) => [...prevTodos, response.data]);
+    setShowAddToDo(false);
+
+  } catch (error) {
+    console.error("Error adding To-Do:", error.response ? error.response.data : error);
+    alert("Failed to add To-Do. Please try again.");
+  }
+};
+
+
+  // Function to cancel
+  const handleCancel = () => {
+    setShowAddToDo(false);
+    navigate('/todo'); // Navigate back to To-Do list
+  };
+
+  return (
+    <div className="addtodo-container">
+      <div className="addtodo-form">
+        <h3>Add New Todo</h3>
+
+        <div className="input-group">
+          <label>Title</label>
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={newTodo.title}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Description</label>
+          <textarea
+            name="description"
+            placeholder="Description"
+            value={newTodo.description}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Due Date</label>
+          <input
+            type="date"
+            name="due_date"
+            value={newTodo.due_date}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Status</label>
+          <select
+            name="status"
+            value={newTodo.status}
+            onChange={handleInputChange}
+          >
+            <option value="pending">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+
+        <button type="button" className="addtodo-btn" onClick={handleSaveTodo}>Save</button>
+        <button type="button" className="cancel-btn" onClick={handleCancel}>Cancel</button>
+      </div>
+    </div>
+  );
+};
+
+export default AddToDo;

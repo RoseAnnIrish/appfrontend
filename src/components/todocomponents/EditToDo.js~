@@ -1,0 +1,62 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { BaseUrl } from "../../constants";
+
+const EditToDo = ({ todo, setEditing, setTodos }) => {
+  const [editedTodo, setEditedTodo] = useState({
+    title: '',
+    description: '',
+    due_date: '',
+    status: 'pending'
+  });
+
+  // Load the todo details when the component is mounted
+  useEffect(() => {
+    setEditedTodo({
+      title: todo.title,
+      description: todo.description,
+      due_date: todo.due_date,
+      status: todo.status
+    });
+  }, [todo]);
+
+  const handleTitleChange = (e) => {
+    setEditedTodo({ ...editedTodo, title: e.target.value });
+  };
+
+  const handleDescriptionChange = (e) => {
+    setEditedTodo({ ...editedTodo, description: e.target.value });
+  };
+
+  const handleDueDateChange = (e) => {
+    setEditedTodo({ ...editedTodo, due_date: e.target.value });
+  };
+
+  const handleStatusChange = (e) => {
+    setEditedTodo({ ...editedTodo, status: e.target.value });
+  };
+
+  const handleUpdateTodo = () => {
+    axios.put(BaseUrl + `/api/todo/${todo.id}/`, editedTodo)
+      .then(response => {
+        const updatedTodos = todos.map(t => t.id === todo.id ? response.data : t);
+        setTodos(updatedTodos);
+        setEditing(null);
+      })
+      .catch(error => console.log("Error updating todo:", error.response ? error.response.data : error.message));
+  };
+
+  return (
+    <div>
+      <h3>Edit Todo</h3>
+      <div>
+        <label>Title</label>
+        <input
+          type="text"
+          placeholder="Title"
+          value={editedTodo.title}
+          onChange={handleTitleChange}
+        />
+      </div>
+      <div>
+        <label>Description</label

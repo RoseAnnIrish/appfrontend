@@ -1,0 +1,188 @@
+/* src/components/TodoList.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+.todo-list-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Montserrat', poppins, sans-serif;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-image: url('https://xmple.com/wallpaper/gradient-linear-pink-3840x2160-c2-ffc0cb-ff69b4-a-120-f-14.svg');
+  position: relative; /* Needed for absolute positioning of logout button */
+}
+
+.todo-list {
+  position: relative;
+  width: 100%;
+  max-width: 1000px; /* Expanded window width for the table */
+  /*padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+  text-align: left;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.todo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logout-btn {
+  position: absolute; /* Position the logout button at the very top-right */
+  top: 20px;
+  right: 20px;
+  background-color: #C2185B; /* Dark Pink */
+  color: white;
+  font-size: 1rem;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.logout-btn:hover {
+  background-color: #9C1A4A; /* Slightly darker pink */
+}
+
+/* Styles for input fields, buttons, etc. */
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  color: #555;
+  display: block;
+}
+
+input, textarea, select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #007BFF;
+}
+
+.add-task-btn {
+  padding: 12px;
+  font-size: 1.2rem;
+  background-color: #FF69B4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 200px; /* Set a specific width for the button */
+  margin-left: auto; /* Push the button to the right */
+  margin-bottom: 20px; /* Add space between the button and the todo list */
+}
+
+.add-task-btn:hover {
+  background-color: #E62987;
+}
+
+.add-task-btn:active {
+  background-color: #FF69B4;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todo.completed {
+  background-color: #f0f8f0;
+}
+
+.todo.in_progress {
+  background-color: #f8f0e0;
+}
+
+.todo.pending {
+  background-color: #f8f0f0;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #FF69B4;
+}
+
+/* Table Styles */
+.todo-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.todo-table th, .todo-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.todo-table th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+}
+
+.todo-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.todo-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.todo-table td button {
+  margin-right: 8px;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.todo-table td button:hover {
+  background-color: #FF69B4;
+}
+
+.todo-table td button:active {
+  background-color: #E62987;
+}
