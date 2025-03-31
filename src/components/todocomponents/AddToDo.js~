@@ -22,50 +22,49 @@ const AddToDo = ({ setTodos, setShowAddToDo }) => {
 
   // Function to add a new To-Do
   const handleSaveTodo = async () => {
-  const token = localStorage.getItem("authtoken");
+    const token = localStorage.getItem("authtoken");
 
-  // ✅ Debugging: Check if the token exists
-  console.log("Auth Token:", token);
+    // ✅ Debugging: Check if the token exists
+    console.log("Auth Token:", token);
 
-  if (!token) {
-    console.error("No authentication token found!");
-    alert("You are not logged in. Please log in again.");
-    return; // Stop execution if there's no token
-  }
+    if (!token) {
+      console.error("No authentication token found!");
+      alert("You are not logged in. Please log in again.");
+      return; // Stop execution if there's no token
+    }
 
-  try {
-    const data = JSON.stringify({
-      user: parseInt(localStorage.getItem('user_id')),
-      title: newTodo.title,
-      description: newTodo.description,
-      due_date: newTodo.due_date,
-      status: newTodo.status
-    });
+    try {
+      const data = JSON.stringify({
+        user: parseInt(localStorage.getItem('user_id')),  // Make sure user_id is an integer
+        title: newTodo.title,
+        description: newTodo.description,
+        due_date: newTodo.due_date,
+        status: newTodo.status
+      });
 
-    const config = {
-      method: 'post',
-      url: `${BaseUrl}/api/todo/todo/`,
-      headers: {
-        Authorization: `Token ${token}`,  // ✅ Make sure the token is sent correctly
-        'Content-Type': 'application/json'
-      },
-      data: data
-    };
+      const config = {
+        method: 'post',
+        url: `${BaseUrl}/api/todo/todo/`,
+        headers: {
+          Authorization: `Token ${token}`,  // ✅ Make sure the token is sent correctly
+          'Content-Type': 'application/json'
+        },
+        data: data
+      };
 
-    console.log("Sending Request:", config); // ✅ Log the request config before sending
+      console.log("Sending Request:", config); // ✅ Log the request config before sending
 
-    const response = await axios.request(config);
-    console.log("Response:", response.data); // ✅ Log the API response
+      const response = await axios.request(config);
+      console.log("Response:", response.data); // ✅ Log the API response
 
-    setTodos((prevTodos) => [...prevTodos, response.data]);
-    setShowAddToDo(false);
+      setTodos((prevTodos) => [...prevTodos, response.data]);
+      setShowAddToDo(false);
 
-  } catch (error) {
-    console.error("Error adding To-Do:", error.response ? error.response.data : error);
-    alert("Failed to add To-Do. Please try again.");
-  }
-};
-
+    } catch (error) {
+      console.error("Error adding To-Do:", error.response ? error.response.data : error);
+      alert("Failed to add To-Do. Please try again.");
+    }
+  };
 
   // Function to cancel
   const handleCancel = () => {

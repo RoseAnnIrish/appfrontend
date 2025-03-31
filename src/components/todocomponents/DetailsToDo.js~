@@ -4,7 +4,7 @@ import { BaseUrl } from "../../constants";
 
 function DetailsToDo({ todo_id, setViewingDetail }) {
     const [todo, setTodo] = useState(null);
-    const token = localStorage.getItem('authtoken');
+    const token = localStorage.getItem('authtoken'); // Ensure it's 'authtoken' instead of 'token'
 
     useEffect(() => {
         if (!todo_id) return;  // Prevent API call if no todo_id is provided
