@@ -3,15 +3,14 @@ import axios from 'axios';
 import { BaseUrl } from "../constants";
 import AddToDo from './todocomponents/AddToDo';
 import EditToDo from './todocomponents/EditToDo';
-import DetailsToDo from './todocomponents/DetailsToDo';
 import './ToDoList.css';
 import { useNavigate } from 'react-router-dom';
 
 function ToDoList() {
   const [todos, setTodos] = useState([]);
   const [editing, setEditing] = useState(null);
-  const [viewingDetail, setViewingDetail] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [showModal, setShowModal] = useState(false); // New state to manage the modal visibility
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +22,7 @@ function ToDoList() {
     }
 
     // Fetch todos for the logged-in user using the userId
-    axios.get(`${BaseUrl}/api/todo/todo/?user=${userId}`) // Pass user_id as query parameter
+    axios.get(`${BaseUrl}/api/todo/todo/?user=${userId}`)
       .then(response => {
         if (response.data.length === 0) {
           console.log("No todos found for this user.");
@@ -33,9 +32,8 @@ function ToDoList() {
       .catch(error => {
         console.log("Error fetching todos:", error); // Handle error
       });
-  }, [navigate]); // This will run only when the component is mounted
+  }, [navigate]);
 
-  // DELETE TODO
   const handleDeleteTodo = (id) => {
     axios.delete(`${BaseUrl}/api/todo/${id}/`)
       .then(() => {
@@ -46,16 +44,24 @@ function ToDoList() {
       });
   };
 
-  // LOGOUT
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user_id'); // Remove user_id after logout
-    navigate('/login'); // Redirect to login
+    navigate('/login');
   };
 
-  // ADD TODO
   const handleAddTodoClick = () => {
     setIsAdding(true); // Show the AddToDo form
+  };
+
+  const handleEditClick = (todo) => {
+    setEditing(todo);
+    setShowModal(true); // Show the modal when edit button is clicked
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false); // Close the modal when done
+    setEditing(null); // Reset the editing state
   };
 
   return (
@@ -68,12 +74,8 @@ function ToDoList() {
           </button>
         </div>
 
-        {/* Conditional rendering for AddToDo, EditToDo, or DetailsToDo */}
-        {editing ? (
-          <EditToDo todo={editing} setEditing={setEditing} setTodos={setTodos} />
-        ) : viewingDetail ? (
-          <DetailsToDo todo_id={viewingDetail} setViewingDetail={setViewingDetail} />
-        ) : isAdding ? (
+        {/* Conditional rendering for AddToDo, EditToDo */}
+        {isAdding ? (
           <AddToDo setTodos={setTodos} setShowAddToDo={setIsAdding} />
         ) : (
           <button
@@ -82,6 +84,16 @@ function ToDoList() {
           >
             Add New Todo
           </button>
+        )}
+
+        {/* Modal for editing a todo */}
+        {showModal && editing && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <EditToDo todo={editing} setEditing={setEditing} setTodos={setTodos} />
+              <button onClick={handleCloseModal} className="close-modal-btn">Close</button>
+            </div>
+          </div>
         )}
 
         {/* Table to display the todos */}
@@ -112,7 +124,7 @@ function ToDoList() {
                     <td>{todo.updated_at}</td>
                     <td>
                       <button
-                        onClick={() => setEditing(todo)}
+                        onClick={() => handleEditClick(todo)}
                         style={{ marginRight: 8 }}
                       >
                         Edit
@@ -122,11 +134,6 @@ function ToDoList() {
                         style={{ marginRight: 8 }}
                       >
                         Delete
-                      </button>
-                      <button
-                        onClick={() => setViewingDetail(todo.id)}
-                      >
-                        View
                       </button>
                     </td>
                   </tr>
