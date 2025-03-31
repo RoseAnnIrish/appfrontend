@@ -18,10 +18,6 @@
   position: relative;
   width: 100%;
   max-width: 1000px; /* Expanded window width for the table */
-  /*padding: 30px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
   text-align: left;
 }
 
@@ -42,7 +38,7 @@ h2 {
   position: absolute; /* Position the logout button at the very top-right */
   top: 20px;
   right: 20px;
-  background-color: #C2185B; /* Dark Pink */
+  background-color: #0f86dc; /* Light Blue */
   color: white;
   font-size: 1rem;
   padding: 8px 16px;
@@ -50,7 +46,7 @@ h2 {
 }
 
 .logout-btn:hover {
-  background-color: #9C1A4A; /* Slightly darker pink */
+  background-color: #8CB3D9; /* Slightly darker light blue */
 }
 
 /* Styles for input fields, buttons, etc. */
@@ -147,6 +143,7 @@ li {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background-color: white; /* White background for the table */
 }
 
 .todo-table th, .todo-table td {
@@ -162,7 +159,11 @@ li {
 }
 
 .todo-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f9f9f9; /* Light gray background for even rows */
+}
+
+.todo-table tr:nth-child(odd) {
+  background-color: white; /* White background for odd rows */
 }
 
 .todo-table tr:hover {
@@ -187,7 +188,73 @@ li {
   background-color: #E62987;
 }
 
-.addnewtodo-btn{
-    background-color: #FF69B4;
+/* New To-Do Button */
+.addnewtodo-btn {
+  background-color: #FF69B4;
+  color: white;
+  padding: 12px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+  transition: background-color 0.3s ease;
+}
 
+.addnewtodo-btn:hover {
+  background-color: #E62987;
+}
+
+.addnewtodo-btn:active {
+  background-color: #FF69B4;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.close-modal-btn {
+  background-color: #FF69B4;
+  padding: 10px;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;  /* Allows positioning relative to the parent */
+  bottom: 380px;  /* Position at the top of the form */
+  right: -440px;  /* Position at the right side */
+}
+
+.close-modal-btn:hover {
+  background-color: #E62987;
+}
+
+.success-message {
+  background-color: #4caf50; /* Green */
+  color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
 }

@@ -1,0 +1,40 @@
+.edittodo-btn {
+  padding: 12px;
+  font-size: 1.2rem;
+  background-color: #FF69B4; /* Pink color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Optional: To make button width consistent */
+}
+
+.edittodo-btn:hover {
+  background-color: #E62987; /* Darker pink on hover */
+}
+
+.edittodo-btn:active {
+  background-color: #FF69B4; /* Retain pink on active */
+}
+
+.cancel-btn {
+  background-color: #e31332; /* Red color */
+  padding: 12px;
+  font-size: 1.2rem;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Optional: To make button width consistent */
+  margin-top: 10px; /* Space between Save and Cancel buttons */
+}
+
+.cancel-btn:hover {
+  background-color: #bf0a23; /* Darker red on hover */
+}
+
+.cancel-btn:active {
+  background-color: #e31332; /* Retain red on active */
+}

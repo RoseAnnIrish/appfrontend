@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BaseUrl } from "../../constants";
+import './EditToDo.css';
 
 const EditToDo = ({ todo, setEditing, setTodos }) => {
   const [editedTodo, setEditedTodo] = useState({
@@ -11,7 +12,8 @@ const EditToDo = ({ todo, setEditing, setTodos }) => {
     status: 'pending'
   });
 
-  // Fetch the todo data when the component mounts or when the todo prop changes
+  const [message, setMessage] = useState('');  // New state for success message
+
   useEffect(() => {
     setEditedTodo({
       user: parseInt(localStorage.getItem('user_id')),
@@ -38,35 +40,37 @@ const EditToDo = ({ todo, setEditing, setTodos }) => {
     setEditedTodo({ ...editedTodo, status: e.target.value });
   };
 
-const handleUpdateTodo = () => {
-  if (!todo.id) {
-    console.error("Invalid todo ID:", todo);
-    return;
-  }
-  const updateUrl = `${BaseUrl}/api/todo/todo/${todo.id}/`;
-  const updatedData = JSON.stringify(editedTodo);
-
-   axios.put(updateUrl, updatedData, {
-    headers: {
-      Authorization: `Token ${localStorage.getItem("token")}`,
-      'Content-Type': 'application/json'
+  const handleUpdateTodo = () => {
+    if (!todo.id) {
+      console.error("Invalid todo ID:", todo);
+      return;
     }
-  })
+    const updateUrl = `${BaseUrl}/api/todo/todo/${todo.id}/`;
+    const updatedData = JSON.stringify(editedTodo);
+
+    axios.put(updateUrl, updatedData, {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("token")}`,
+        'Content-Type': 'application/json'
+      }
+    })
     .then(response => {
       setTodos(prevTodos =>
         prevTodos.map(t => (t.id === todo.id ? response.data : t))
       );
-      setEditing(null); // Close the edit form after updating
+      setMessage('Your todo is now updated!');  // Show the success message
+      setTimeout(() => setMessage(''), 8000);  // Hide the message after 3 seconds
+      setEditing(null);
     })
     .catch(error => {
       console.error("Error updating todo:", error.response ? error.response.data : error.message);
     });
-};
-
+  };
 
   return (
     <div>
       <h3>Edit Todo</h3>
+      {message && <div className="success-message">{message}</div>}  {/* Success message display */}
       <div>
         <label>Title</label>
         <input
