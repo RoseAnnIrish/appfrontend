@@ -52,10 +52,10 @@ const AddToDo = ({ setTodos, setShowAddToDo }) => {
         data: data
       };
 
-      console.log("Sending Request:", config); // ✅ Log the request config before sending
+      console.log("Sending Request:", config);
 
       const response = await axios.request(config);
-      console.log("Response:", response.data); // ✅ Log the API response
+      console.log("Response:", response.data);
 
       setTodos((prevTodos) => [...prevTodos, response.data]);
       setShowAddToDo(false);

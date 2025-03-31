@@ -7,43 +7,55 @@ import DetailsToDo from './todocomponents/DetailsToDo';
 import './ToDoList.css';
 import { useNavigate } from 'react-router-dom';
 
-
 function ToDoList() {
   const [todos, setTodos] = useState([]);
   const [editing, setEditing] = useState(null);
   const [viewingDetail, setViewingDetail] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-
-  // Fetch todos when the component is mounted
   useEffect(() => {
-    axios.get(BaseUrl + '/api/todo/')
-      .then(response => setTodos(response.data))
-      .catch(error => console.log(error));
-  }, []);
+    const userId = localStorage.getItem('user_id');
 
-  // Delete todo
-  const handleDeleteTodo = (id) => {
-    axios.delete(BaseUrl + `/api/todo/${id}/`)
-      .then(() => {
-        setTodos(todos.filter(todo => todo.id !== id));
+    if (!userId) {
+      navigate('/login');
+      return;
+    }
+
+    // Fetch todos for the logged-in user using the userId
+    axios.get(`${BaseUrl}/api/todo/todo/?user=${userId}`) // Pass user_id as query parameter
+      .then(response => {
+        if (response.data.length === 0) {
+          console.log("No todos found for this user.");
+        }
+        setTodos(response.data); // Set fetched todos to state
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        console.log("Error fetching todos:", error); // Handle error
+      });
+  }, [navigate]); // This will run only when the component is mounted
+
+  // DELETE TODO
+  const handleDeleteTodo = (id) => {
+    axios.delete(`${BaseUrl}/api/todo/${id}/`)
+      .then(() => {
+        setTodos(todos.filter(todo => todo.id !== id)); // Update state after delete
+      })
+      .catch(error => {
+        console.log("Error deleting todo:", error); // Handle error
+      });
   };
 
-  // Handle logout (removes token)
+  // LOGOUT
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');  };
-
-  // Handle AddTodo form visibility
-  const handleAddTodoClick = () => {
-    setIsAdding(true);
+    localStorage.removeItem('user_id'); // Remove user_id after logout
+    navigate('/login'); // Redirect to login
   };
 
-  const handleCancelAddTodo = () => {
-    setIsAdding(false);
+  // ADD TODO
+  const handleAddTodoClick = () => {
+    setIsAdding(true); // Show the AddToDo form
   };
 
   return (
@@ -88,36 +100,42 @@ function ToDoList() {
               </tr>
             </thead>
             <tbody>
-              {todos.map(todo => (
-                <tr key={todo.id}>
-                  <td>{todo.id}</td>
-                  <td>{todo.title}</td>
-                  <td>{todo.description}</td>
-                  <td>{todo.due_date}</td>
-                  <td>{todo.status}</td>
-                  <td>{todo.created_at}</td>
-                  <td>{todo.updated_at}</td>
-                  <td>
-                    <button
-                      onClick={() => setEditing(todo)}
-                      style={{ marginRight: 8 }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteTodo(todo.id)}
-                      style={{ marginRight: 8 }}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      onClick={() => setViewingDetail(todo.id)}
-                    >
-                      View
-                    </button>
-                  </td>
+              {todos.length > 0 ? (
+                todos.map(todo => (
+                  <tr key={todo.id}>
+                    <td>{todo.id}</td>
+                    <td>{todo.title}</td>
+                    <td>{todo.description}</td>
+                    <td>{todo.due_date}</td>
+                    <td>{todo.status}</td>
+                    <td>{todo.created_at}</td>
+                    <td>{todo.updated_at}</td>
+                    <td>
+                      <button
+                        onClick={() => setEditing(todo)}
+                        style={{ marginRight: 8 }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteTodo(todo.id)}
+                        style={{ marginRight: 8 }}
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => setViewingDetail(todo.id)}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8">No todos available</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

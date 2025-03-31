@@ -4,6 +4,7 @@ import { BaseUrl } from "../../constants";
 
 const EditToDo = ({ todo, setEditing, setTodos }) => {
   const [editedTodo, setEditedTodo] = useState({
+    user: localStorage.getItem('user_id'),
     title: '',
     description: '',
     due_date: '',
@@ -13,6 +14,7 @@ const EditToDo = ({ todo, setEditing, setTodos }) => {
   // Fetch the todo data when the component mounts or when the todo prop changes
   useEffect(() => {
     setEditedTodo({
+      user: parseInt(localStorage.getItem('user_id')),
       title: todo.title,
       description: todo.description,
       due_date: todo.due_date,
@@ -36,15 +38,31 @@ const EditToDo = ({ todo, setEditing, setTodos }) => {
     setEditedTodo({ ...editedTodo, status: e.target.value });
   };
 
-  const handleUpdateTodo = () => {
-    axios.put(BaseUrl + `/api/todo/${todo.id}/`, editedTodo)
-      .then(response => {
-        const updatedTodos = todo.map(t => t.id === todo.id ? response.data : t);
-        setTodos(updatedTodos);
-        setEditing(null); // Close the edit form after updating
-      })
-      .catch(error => console.log("Error updating todo:", error.response ? error.response.data : error.message));
-  };
+const handleUpdateTodo = () => {
+  if (!todo.id) {
+    console.error("Invalid todo ID:", todo);
+    return;
+  }
+  const updateUrl = `${BaseUrl}/api/todo/todo/${todo.id}/`;
+  const updatedData = JSON.stringify(editedTodo);
+
+   axios.put(updateUrl, updatedData, {
+    headers: {
+      Authorization: `Token ${localStorage.getItem("token")}`,
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      setTodos(prevTodos =>
+        prevTodos.map(t => (t.id === todo.id ? response.data : t))
+      );
+      setEditing(null); // Close the edit form after updating
+    })
+    .catch(error => {
+      console.error("Error updating todo:", error.response ? error.response.data : error.message);
+    });
+};
+
 
   return (
     <div>
