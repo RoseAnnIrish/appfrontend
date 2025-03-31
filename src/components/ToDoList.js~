@@ -3,48 +3,61 @@ import axios from 'axios';
 import { BaseUrl } from "../constants";
 import AddToDo from './todocomponents/AddToDo';
 import EditToDo from './todocomponents/EditToDo';
-import DetailsToDo from './todocomponents/DetailsToDo';
 import './ToDoList.css';
 import { useNavigate } from 'react-router-dom';
-import './todocomponents/EditToDo.css';
 
 function ToDoList() {
   const [todos, setTodos] = useState([]);
   const [editing, setEditing] = useState(null);
-  const [viewingDetail, setViewingDetail] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
-  const [showModal, setShowModal] = useState(false); // New state to manage the modal visibility
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const userId = localStorage.getItem('user_id');
+    const token = localStorage.getItem('token'); // Get token for authorization
 
-    if (!userId) {
-      navigate('/login');
+    if (!userId || !token) {
+      navigate('/login'); // Redirect to login if no user or token is found
       return;
     }
 
-    // Fetch todos for the logged-in user using the userId
-    axios.get(`${BaseUrl}/api/todo/todo/?user=${userId}`)
-      .then(response => {
-        if (response.data.length === 0) {
-          console.log("No todos found for this user.");
-        }
-        setTodos(response.data); // Set fetched todos to state
-      })
-      .catch(error => {
-        console.log("Error fetching todos:", error); // Handle error
-      });
+    // Fetch todos for the logged-in user using the userId and Token for authorization
+    axios.get(`${BaseUrl}/api/todo/todo/?user=${userId}`, {
+      headers: {
+        'Authorization': `Token ${token}`, // Include token for authentication
+      }
+    })
+    .then(response => {
+      if (response.data.length === 0) {
+        console.log("No todos found for this user.");
+      }
+      setTodos(response.data); // Set fetched todos to state
+    })
+    .catch(error => {
+      console.log("Error fetching todos:", error); // Handle error
+    });
   }, [navigate]);
 
   const handleDeleteTodo = (id) => {
-    axios.delete(`${BaseUrl}/api/todo/${id}/`)
-      .then(() => {
-        setTodos(todos.filter(todo => todo.id !== id)); // Update state after delete
-      })
-      .catch(error => {
-        console.log("Error deleting todo:", error); // Handle error
-      });
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.log("No token found. Please log in.");
+      return;
+    }
+
+    axios.delete(`${BaseUrl}/api/todo/todo/${id}/`, {
+      headers: {
+        'Authorization': `Token ${token}` // Include the token for authentication
+      }
+    })
+    .then(() => {
+      setTodos(todos.filter(todo => todo.id !== id)); // Remove deleted todo from state
+    })
+    .catch(error => {
+      console.log("Error deleting todo:", error); // Handle error
+    });
   };
 
   const handleLogout = () => {
@@ -71,20 +84,18 @@ function ToDoList() {
     <div className="todo-list-container">
       <div className="todo-list">
         <div className="todo-header">
-          <h2>Todo List</h2>
+          <h2>Get Things Done.</h2>
+        <p className="todo-subtitle">Your To-Do List</p> {/* Added class for styling */}
           <button onClick={handleLogout} className="logout-btn">
             Logout
           </button>
         </div>
 
-        {/* Conditional rendering for AddToDo, EditToDo, or DetailsToDo */}
+        {/* Conditional rendering for AddToDo, EditToDo */}
         {isAdding ? (
           <AddToDo setTodos={setTodos} setShowAddToDo={setIsAdding} />
         ) : (
-          <button
-            onClick={handleAddTodoClick}
-            className="addnewtodo-btn"
-          >
+          <button onClick={handleAddTodoClick} className="addnewtodo-btn">
             Add New Todo
           </button>
         )}
@@ -129,19 +140,17 @@ function ToDoList() {
                       <button
                         onClick={() => handleEditClick(todo)}
                         style={{ marginRight: 8 }}
+                        className={"btn-edit"}
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDeleteTodo(todo.id)}
                         style={{ marginRight: 8 }}
+                        className={"btn-delete"}
+
                       >
                         Delete
-                      </button>
-                      <button
-                        onClick={() => setViewingDetail(todo.id)}
-                      >
-                        View
                       </button>
                     </td>
                   </tr>
