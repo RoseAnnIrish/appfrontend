@@ -76,7 +76,9 @@ const Login = () => {
         {message && <p className="message">{message}</p>}
 
         <div className="signup-link">
-          <p>Don't have an account? <a href="http://localhost:3000/register">Sign up here</a></p>
+          <p>
+            Don't have an account? <a href={`${BaseUrl}/api/register`}>Sign up here</a>
+          </p>
         </div>
       </form>
     </div>
