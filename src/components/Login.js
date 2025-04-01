@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
 import { BaseUrl } from "../constants";
+import { Link } from "react-router-dom";
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -77,7 +79,9 @@ const Login = () => {
 
         <div className="signup-link">
           <p>
-            Don't have an account? <a href={`${BaseUrl}/api/register`}>Sign up here</a>
+            Don't have an account?
+            <Link to="/register">Sign up here</Link>
+
           </p>
         </div>
       </form>
