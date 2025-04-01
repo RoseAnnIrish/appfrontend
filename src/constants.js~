@@ -1,4 +1,4 @@
-export const BaseUrl = "https://appbackend-mu.vercel.app";
+export const BaseUrl = "appbackend-mu.vercel.app";
 
 
     //"appfrontend-seven.vercel.app";
